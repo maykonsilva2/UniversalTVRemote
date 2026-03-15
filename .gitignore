@@ -1,0 +1,35 @@
+# Gradle
+.gradle/
+build/
+*/build/
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Kotlin
+*.class
+*.kotlin_module
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db
+
+# Segredos (NUNCA commitar!)
+secrets.properties
+keystore.properties
+*.jks
+*.keystore
+google-services.json
+firebase-app-distribution.json
+
+# Docker
+.dockerignore

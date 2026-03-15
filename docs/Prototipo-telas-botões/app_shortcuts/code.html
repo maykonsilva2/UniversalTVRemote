@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Smart TV Remote - App Shortcuts</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ef371f",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221210",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto overflow-x-hidden border-x border-primary/10">
+<header class="flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between sticky top-0 z-20">
+<div class="flex size-10 shrink-0 items-center justify-center text-primary">
+<span class="material-symbols-outlined text-3xl">tv_gen</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Living Room TV</h2>
+<div class="flex w-10 items-center justify-end">
+<button class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-2xl">settings</span>
+</button>
+</div>
+</header>
+<div class="px-4 py-3 sticky top-14 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<label class="flex flex-col min-w-40 h-12 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full shadow-sm">
+<div class="text-primary/60 flex border-none bg-primary/5 dark:bg-primary/10 items-center justify-center pl-4 rounded-l-xl">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-r-xl text-slate-900 dark:text-slate-100 focus:outline-0 focus:ring-2 focus:ring-primary/30 border-none bg-primary/5 dark:bg-primary/10 h-full placeholder:text-primary/40 px-4 pl-2 text-base font-normal leading-normal" placeholder="Search apps or content" value=""/>
+</div>
+</label>
+</div>
+<main class="flex-1 overflow-y-auto">
+<div class="px-4 pt-4 pb-2">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight">Quick Launch</h3>
+<span class="text-primary text-xs font-semibold uppercase tracking-wider">8 Running</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 p-4">
+<div class="flex flex-col gap-3 rounded-xl border border-primary/10 bg-primary/5 dark:bg-primary/10 p-4 items-center justify-center hover:bg-primary/20 transition-all cursor-pointer group">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-xl w-16 shrink-0 shadow-lg group-hover:scale-105 transition-transform" data-alt="Netflix app logo icon red background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDBthlKAllhozr2Xnq9UyBNDoS_052TeWQ8Oyn4zKK3VYSgiitjcWX0PUpKfZH5_d5AbV9qpgbHM-xKygnYJR6-G2fd83DzQ4kLB1CmYZox0bKmVwjEP7ik48qzebszsR8GXMBbnR7rXO9M_iYUx4lx18UmixfpG35HcgFt9U-KU3V4Kfmt1w_3rytunrD8nzMaQFVsASzV3K-jxgI821dJdEWgnNSjttib_wWqqDuxM742MbmpszssvO8EMa8BlwDT8fcQgb3Imgg");'></div>
+<h2 class="text-slate-900 dark:text-slate-100 text-sm font-bold leading-tight">Netflix</h2>
+</div>
+<div class="flex flex-col gap-3 rounded-xl border border-primary/10 bg-primary/5 dark:bg-primary/10 p-4 items-center justify-center hover:bg-primary/20 transition-all cursor-pointer group">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-xl w-16 shrink-0 shadow-lg group-hover:scale-105 transition-transform" data-alt="YouTube app logo icon white play button" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB8FE-327DaZWssH1fyvZA6NeVcGAwvQnrm3wjd1tBGCHdjctM4rEpBJBJUVlAuwHbblPBbvmoArkJOikfOxMapuUYxw0ux8wiUtzUWf4ESSK6XkHOMZP7-EXNVjsTl0DEZ07d40qdoJTXYbsvAKmRH4Sx9vgufAvGTBCkxM7xZBsiWG5JoK0GqXMujjqHr6R-N0bOg0ExXrIL7TAtkIWFW6ELdvEe0PjEQg-Wi00dBk27fFF-uhb0lUu2ir_LXKZ2rQtPdZRib75g");'></div>
+<h2 class="text-slate-900 dark:text-slate-100 text-sm font-bold leading-tight">YouTube</h2>
+</div>
+<div class="flex flex-col gap-3 rounded-xl border border-primary/10 bg-primary/5 dark:bg-primary/10 p-4 items-center justify-center hover:bg-primary/20 transition-all cursor-pointer group">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-xl w-16 shrink-0 shadow-lg group-hover:scale-105 transition-transform" data-alt="Prime Video app logo icon blue background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDxC1pRf5aoGYnOLtCcz9wqYJKLplTM0xDRzCrh4cu88kBC6_Gj7FI_urIck9f4R7kvvoIvuVNh1oqnjdJUeEyVODmgO4HXvjpQKHsJZwRRIjEAPDWcGwp6ZnW7lr0hHmlxZL8xudetxG0TPfL5_7QoAXaWTPwk0SPP4zwsTaVEnmKoaepHJ8qmKyjmUMA18zSKrcFYWr4qpigWLKsjgWmlJQ7OeZ9tLqb-qHw8hvfw9QT1wQuLD_-fKT44K9txqhfU_0TXRvUneik");'></div>
+<h2 class="text-slate-900 dark:text-slate-100 text-sm font-bold leading-tight">Prime Video</h2>
+</div>
+<div class="flex flex-col gap-3 rounded-xl border border-primary/10 bg-primary/5 dark:bg-primary/10 p-4 items-center justify-center hover:bg-primary/20 transition-all cursor-pointer group">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-xl w-16 shrink-0 shadow-lg group-hover:scale-105 transition-transform" data-alt="Disney Plus app logo icon dark blue gradient" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuABPWn54sCAsnjBUJpFFeUPq1cAjFfxZu0TlMfo-HmGvIiswXVvKTz8KB6ltnKjsMYz2vX-aZ-qP1FBciqxOKC6QFh91piP1lS-DhrMwi2eXULeLu3PzUrmWuyne-6QNY4BQhFooZN_OZU6FF7PfC1cMDpkoEQCT54-kqz22Sx6DAQ96ehrB6KLqS8dcH8mtdJcPV4NHHB6YswVQevHzQTz64gAPCgwztSupMXs96UrLcg9Q1ytE--vrTBlqfxr8iBZVsx3M6YSRtE");'></div>
+<h2 class="text-slate-900 dark:text-slate-100 text-sm font-bold leading-tight">Disney+</h2>
+</div>
+<div class="flex flex-col gap-3 rounded-xl border border-primary/10 bg-primary/5 dark:bg-primary/10 p-4 items-center justify-center hover:bg-primary/20 transition-all cursor-pointer group">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-xl w-16 shrink-0 shadow-lg group-hover:scale-105 transition-transform" data-alt="Hulu app logo icon green background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAEaS5UWF5mQ9DRsnAgkE2xwxidJDaDQZkmZPcgJdF_qGKwFzKJxD20yr-VdWeqBnp9STNNFChWvhW7bYs4DcFt6q6T-fRdAwLji-SR0jv6cbvsizWE281-DWMnw2M4_7W4N6_uj10ZnQJupYBJRGET_j7uiTbyFySuHKac2BwHSOBcp6P47qFwKzTZn6i3Aas9U_BWKqQishrNpOyan8Z7o0K2uf8tMAFrUiR58y_Zl75y_QXHfvq5A053MXQHRtXLHY6Kpeblojw");'></div>
+<h2 class="text-slate-900 dark:text-slate-100 text-sm font-bold leading-tight">Hulu</h2>
+</div>
+<div class="flex flex-col gap-3 rounded-xl border border-primary/10 bg-primary/5 dark:bg-primary/10 p-4 items-center justify-center hover:bg-primary/20 transition-all cursor-pointer group">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-xl w-16 shrink-0 shadow-lg group-hover:scale-105 transition-transform" data-alt="HBO Max app logo icon purple background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuASHxF-cVq2q-Oc1L7D_bP5IcNtAX7rPcA_5CKZLX6v4H21Zx-qNUMX0w0hXTOHhz_5lJeqVqJuGCo6_S9gSta_ZUd2Ct6Emhl7yatCtW_xlxPWFSAb4iFJrDFHzytl6t1CjBp6Ug11VJ_HUqA7pGs6Bb4il3eibQy-tJAf79YG0iDeRF4EueO8Mp1vsMxgisqjUdgqv-atLIgvQ0Sp2FHyeX_iQI2j5ajCqZP7VZNqX-RNzmiA6f7idDqV3zqclF71QhbslS5OL1M");'></div>
+<h2 class="text-slate-900 dark:text-slate-100 text-sm font-bold leading-tight">HBO Max</h2>
+</div>
+<div class="flex flex-col gap-3 rounded-xl border border-primary/10 bg-primary/5 dark:bg-primary/10 p-4 items-center justify-center hover:bg-primary/20 transition-all cursor-pointer group">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-xl w-16 shrink-0 shadow-lg group-hover:scale-105 transition-transform" data-alt="Spotify app logo icon green circle" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDR_TSy7BroVWx2-AV86dd9yqwEeX4ZLxaeR9Epq4huQynsKNDm7fcxpjpeb6Lhhp9Q9qPzF9o-PsvwadFtHnxWMdk_hu0xQ21EYymFOCVPHzj5eVQ75IhcUdyMtzgB-M2T98h2XUV60oYYZnmIPejIhNelOfJn81vabOZp8n5qWovJT6jw8TRMeSIp08z_QYHjwVmBjv6XYbatxfWmDkifNgHfAoGFjqsoD8s1A6XPCM0P0NsW5kRuUriuDh0xinfkauv_3dvtJOA");'></div>
+<h2 class="text-slate-900 dark:text-slate-100 text-sm font-bold leading-tight">Spotify</h2>
+</div>
+<div class="flex flex-col gap-3 rounded-xl border border-primary/10 bg-primary/5 dark:bg-primary/10 p-4 items-center justify-center hover:bg-primary/20 transition-all cursor-pointer group">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-xl w-16 shrink-0 shadow-lg group-hover:scale-105 transition-transform" data-alt="Apple TV app logo icon black background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDyx-6Tbwz-89tlzMx4ekwi0cqRC6HHOt8RDWqoy1jbXe-zdcq9VCsHLRu2VV8XrgZlWt2ru8FHnq6hBWX7dqEpn338tI46lUE8n_oUtTMcSsVkqumjAV77zOPuUidgCBN2q0-dEnKk2bE8UslorMv4P6h0ahAIi3cJ25qfVz676eR1z_OGUHzzh6En8BugwqpbjsHhfujc48FBBXnOR6JtsOmg2CweCJGh4h19K_4mZ_4ImWeNu0l76wqwXS5roUKuUzS-d5NYPlo");'></div>
+<h2 class="text-slate-900 dark:text-slate-100 text-sm font-bold leading-tight">Apple TV</h2>
+</div>
+</div>
+<div class="h-24"></div>
+</main>
+<div class="fixed bottom-24 right-4 z-30">
+<button class="flex items-center gap-2 px-5 h-14 bg-primary text-white rounded-full shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined">keyboard</span>
+<span class="font-bold">Open Keyboard</span>
+</button>
+</div>
+<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto z-40">
+<div class="flex gap-2 border-t border-primary/10 bg-background-light dark:bg-background-dark px-4 pb-6 pt-2 shadow-[0_-4px_10px_rgba(0,0,0,0.1)]">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-primary/40 hover:text-primary transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">remote_gen</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-wider">Remote</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">widgets</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-wider">Apps</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-primary/40 hover:text-primary transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">cast</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-wider">Cast</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-primary/40 hover:text-primary transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">settings</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-wider">Setup</p>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

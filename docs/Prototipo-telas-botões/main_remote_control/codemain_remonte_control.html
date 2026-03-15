@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Smart TV Remote</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ef371f",
+                        "nav-blue": "#211181",
+                        "nav-highlight": "#4222D7",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221210",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .tactile-shadow {
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.1), 0 4px 6px rgba(0,0,0,0.4);
+        }
+        .dpad-gradient {
+            background: radial-gradient(circle at center, #4222D7 0%, #211181 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
+<!-- Remote Shell -->
+<div class="relative w-full max-w-[380px] aspect-[9/19] bg-slate-900/40 dark:bg-black/40 backdrop-blur-xl border border-slate-700/30 rounded-[3rem] p-6 shadow-2xl flex flex-col overflow-hidden">
+<!-- Top Status Bar -->
+<div class="flex justify-between items-center mb-8 px-4">
+<span class="material-symbols-outlined text-slate-400">cast</span>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+<span class="text-xs font-medium text-slate-400">CONNECTED</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-xl">settings</span>
+</div>
+<!-- Power Button Section -->
+<div class="flex justify-center mb-10">
+<button class="group relative flex items-center justify-center w-20 h-20 rounded-full bg-primary tactile-shadow active:scale-95 transition-transform">
+<div class="absolute inset-0 rounded-full bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="material-symbols-outlined text-white text-4xl">power_settings_new</span>
+</button>
+</div>
+<!-- D-Pad Navigation Area -->
+<div class="relative flex-1 flex flex-col items-center justify-center mb-10">
+<div class="relative w-64 h-64 rounded-full dpad-gradient tactile-shadow p-2 flex items-center justify-center border-4 border-nav-highlight/20">
+<!-- Navigation Arrows -->
+<button class="absolute top-4 p-2 text-white/80 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-4xl">keyboard_arrow_up</span>
+</button>
+<button class="absolute bottom-4 p-2 text-white/80 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-4xl">keyboard_arrow_down</span>
+</button>
+<button class="absolute left-4 p-2 text-white/80 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-4xl">keyboard_arrow_left</span>
+</button>
+<button class="absolute right-4 p-2 text-white/80 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-4xl">keyboard_arrow_right</span>
+</button>
+<!-- Center OK Button -->
+<button class="w-24 h-24 rounded-full bg-nav-highlight tactile-shadow flex items-center justify-center text-white font-bold text-xl active:scale-90 transition-transform">
+                    OK
+                </button>
+</div>
+</div>
+<!-- Control Grid (Volume, Mute, Channel) -->
+<div class="grid grid-cols-3 gap-6 px-4 mb-8">
+<!-- Volume Rocker -->
+<div class="flex flex-col items-center bg-slate-800/50 rounded-2xl p-2 tactile-shadow">
+<button class="p-4 text-slate-300 hover:text-white transition-colors">
+<span class="material-symbols-outlined">add</span>
+</button>
+<span class="text-[10px] font-bold text-slate-500 py-1">VOL</span>
+<button class="p-4 text-slate-300 hover:text-white transition-colors">
+<span class="material-symbols-outlined">remove</span>
+</button>
+</div>
+<!-- Mute & Home -->
+<div class="flex flex-col justify-between items-center py-2">
+<button class="w-12 h-12 rounded-full bg-slate-800/80 tactile-shadow flex items-center justify-center text-slate-300 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">volume_off</span>
+</button>
+<button class="w-12 h-12 rounded-full bg-slate-800/80 tactile-shadow flex items-center justify-center text-slate-300 hover:text-white transition-colors">
+<span class="material-symbols-outlined">home</span>
+</button>
+</div>
+<!-- Channel Rocker -->
+<div class="flex flex-col items-center bg-slate-800/50 rounded-2xl p-2 tactile-shadow">
+<button class="p-4 text-slate-300 hover:text-white transition-colors">
+<span class="material-symbols-outlined">keyboard_arrow_up</span>
+</button>
+<span class="text-[10px] font-bold text-slate-500 py-1">CH</span>
+<button class="p-4 text-slate-300 hover:text-white transition-colors">
+<span class="material-symbols-outlined">keyboard_arrow_down</span>
+</button>
+</div>
+</div>
+<!-- Secondary Controls -->
+<div class="flex justify-around items-center px-4 mb-10">
+<button class="flex flex-col items-center gap-1 group">
+<div class="w-10 h-10 rounded-xl bg-slate-800/60 tactile-shadow flex items-center justify-center text-slate-400 group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<span class="text-[10px] text-slate-500">BACK</span>
+</button>
+<button class="flex flex-col items-center gap-1 group">
+<div class="w-14 h-10 rounded-xl bg-slate-800/60 tactile-shadow flex items-center justify-center text-slate-400 group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</div>
+<span class="text-[10px] text-slate-500">MENU</span>
+</button>
+<button class="flex flex-col items-center gap-1 group">
+<div class="w-10 h-10 rounded-xl bg-slate-800/60 tactile-shadow flex items-center justify-center text-slate-400 group-hover:text-white transition-colors">
+<span class="material-symbols-outlined">search</span>
+</div>
+<span class="text-[10px] text-slate-500">SEARCH</span>
+</button>
+</div>
+<!-- App Shortcuts (Bottom) -->
+<div class="mt-auto flex justify-between gap-3 pb-4">
+<button class="flex-1 h-10 rounded-lg bg-slate-800/40 border border-slate-700/50 text-[10px] font-bold text-white/60 hover:bg-slate-700/60 transition-colors uppercase">Netflix</button>
+<button class="flex-1 h-10 rounded-lg bg-slate-800/40 border border-slate-700/50 text-[10px] font-bold text-white/60 hover:bg-slate-700/60 transition-colors uppercase">Youtube</button>
+<button class="flex-1 h-10 rounded-lg bg-slate-800/40 border border-slate-700/50 text-[10px] font-bold text-white/60 hover:bg-slate-700/60 transition-colors uppercase">Prime</button>
+</div>
+</div>
+<!-- Bottom Navigation Component -->
+<div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto z-50">
+<div class="flex gap-2 border-t border-slate-700/50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 pb-6 pt-2 rounded-t-3xl shadow-xl">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined fill-1">remote_gen</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Remote</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">grid_view</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Apps</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-500 dark:text-slate-400" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">devices</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Devices</p>
+</a>
+</div>
+</div>
+</body></html>
