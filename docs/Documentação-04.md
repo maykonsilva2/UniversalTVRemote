@@ -174,7 +174,7 @@ docker compose version
 
 ## 2. Criação e Configuração do Projeto
 
-### 2.1 Criar Novo Projeto no Android Studio
+### 2.1 Criar Novo Projeto no Android Studio [✅]
 
 1. Abra o **Android Studio**
 2. Clique em **New Project**
@@ -194,7 +194,7 @@ docker compose version
 
 > ⚠️ **Atenção**: Use **API 26** como minSdk (não API 24 como citado na Doc-02). O motivo: recursos de rede modernos, WebSockets robustos e APIs de descoberta de dispositivos estão melhor suportadas a partir do Android 8.0. Isso ainda cobre mais de 98% dos dispositivos ativos.
 
-### 2.2 Verificar que o projeto compila
+### 2.2 Verificar que o projeto compila [✅]
 
 ```bash
 cd ~/Projetos/UniversalTVRemote
@@ -265,7 +265,7 @@ UniversalTVRemote/
 
 ## 4. Configuração do Git e Git Flow
 
-### 4.1 Inicializar repositório e criar .gitignore
+### 4.1 Inicializar repositório e criar .gitignore [✅]
 
 ```bash
 cd ~/Projetos/UniversalTVRemote
@@ -312,36 +312,39 @@ firebase-app-distribution.json
 .dockerignore
 EOF
 
-# Primeiro commit
+# Primeiro commit [✅]
 git add .
 git commit -m "chore: initial commit with project structure and gitignore"
 ```
 
-### 4.2 Configurar Git Flow (estratégia de branches)
+### 4.2 Configurar Git Flow (estratégia de branches) [✅]
 
 ```bash
 # Criar branch de desenvolvimento
 git checkout -b develop
-git push -u origin develop  # (após configurar repositório remoto)
 
 # Estrutura de branches:
-# main     — código de produção (sempre estável)
-# develop  — integração de features
-# feature/nome-da-feature — novas funcionalidades
-# hotfix/nome-do-bug      — correções urgentes em produção
+
+# main     — código de produção (sempre estável) É a ramificação primária de distribuição. O código contido na main deve estar estritamente em estado funcional e compilável.
+
+# develop  — integração de features o seu conteúdo é fundido (merged) com a main para gerar uma nova versão (Release).
+
+# feature/nome-da-feature — novas funcionalidades. São ramificações efêmeras (temporárias) criadas sempre a partir da develop. Elas servem para encapsular o código de uma nova funcionalidade específica. Isso impede que um código incompleto quebre o ambiente de integração.
+
+# hotfix/nome-do-bug      — correções urgentes em produção. São ramificações de emergência. Diferente das features, um hotfix é ramificado diretamente a partir da main. Seu propósito é corrigir uma falha crítica em produção (ex: um crash imediato ao abrir o app). Após a correção, o código é fundido simultaneamente na main (para gerar a atualização do app) e na develop (para garantir que o bug não retorne nas próximas versões).
 ```
 
 ### 4.3 Criar repositório remoto no GitHub
 
 ```bash
 # Instalar GitHub CLI (opcional, mas facilita)
-sudo pacman -S github-cli
+sudo pacman -S github-cli [✅]
 
 # Autenticar
-gh auth login
+gh auth login [✅]
 
-# Criar repositório remoto
-gh repo create UniversalTVRemote --private --source=. --push
+# Criar repositório remoto (Público para portfólio)
+gh repo create UniversalTVRemote --public --source=. --push  [✅] 
 
 # Ou manualmente: criar no GitHub.com e adicionar remote
 git remote add origin https://github.com/antoniosilva/UniversalTVRemote.git
@@ -349,7 +352,142 @@ git push -u origin main
 git push -u origin develop
 ```
 
-### 4.4 Conventional Commits
+### 4.4 Licenciamento de Software (Licença MIT) [✅]
+
+Para manter o código aberto (*Open Source*) e, simultaneamente, reter o direito de comercialização ou publicação autônoma na Google Play Store, a adoção de uma licença permissiva é mandatória. A **Licença MIT** é o padrão da indústria para este cenário, pois isenta o autor de responsabilidade civil sobre o uso de terceiros, mas permite a livre distribuição do código.
+
+Execute o seguinte comando no terminal (na raiz do projeto) para gerar o arquivo `LICENSE`:
+
+```bash
+cat > LICENSE << 'EOF'
+MIT License
+
+Copyright (c) 2026 Antonio Silva
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+EOF
+```
+
+### 🔁 **O Ciclo do Git Flow (Quando Fazer Commits?)** [✅]
+
+Sempre que você finalizar uma etapa lógica (como criar um arquivo importante, finalizar a construção de uma tela ou configurar o banco de dados), você deve registrar (commitar) essas mudanças no Git e enviá-las para o repositório remoto GitHub. Isso garante que seu trabalho  está documentado, versionado e seguro.
+
+**Como você acabou de criar o arquivo `LICENSE`**, este é o momento perfeito para rodar o ciclo do Git:
+
+```bash
+# 1. Prepara todos os arquivos adicionados ou modificados (staging)
+git add LICENSE
+
+# 2. Registra o lote de mudanças com uma mensagem semântica (o que foi feito)
+git commit -m "docs: adicionar licença MIT para o projeto open source"
+
+# 3. Envia o histórico local com segurança para o servidor (na branch develop)
+git push origin develop
+```
+
+> 💡 **Regra de Ouro (Repetição):** Você fará essa sequência de 3 comandos dezenas de vezes durante o desenvolvimento. Por exemplo, logo após criar o `README.md` no próximo passo, você rodará `git add README.md`, fará um `commit` descrevendo a criação do README, e um `push` para enviar.
+
+
+### 4.5 Documentação de Apresentação (README.md) [✅]
+
+O arquivo `README.md` localizado na raiz do projeto é a interface de entrada do seu repositório no GitHub. Para fins curriculares, ele deve expor de forma explícita a pilha tecnológica (*Tech Stack*) e os padrões de projeto (*Design Patterns*) que você domina. Em processos de triagem técnica, engenheiros de *software* e recrutadores avaliam a legibilidade, a arquitetura e o licenciamento antes de executar o código.
+
+Execute o comando abaixo para gerar um `README.md` estruturado com as especificações da sua arquitetura:
+
+```bash
+cat > README.md << 'EOF'
+# Universal TV Remote 📺
+
+Um aplicativo Android nativo, de código aberto, desenvolvido para atuar como um controle remoto universal para Smart TVs via rede Wi-Fi (WebSockets e APIs REST).
+
+> **Aviso de Transparência Curricular:** A documentação e base arquitetural deste projeto foram elaboradas com o auxílio de ferramentas de Inteligência Artificial para fins de aceleração de aprendizado. No entanto, é fundamental destacar que **eu estudei, escrevi e revisei** rigorosamente cada trecho de lógica, arquitetura e documentação para extrair a máxima compreensão sobre o ecossistema Android moderno. Esta aplicação não é apenas código gerado, mas o reflexo do meu entendimento técnico aplicado na prática.
+
+Este projeto tem como objetivo demonstrar a implementação de padrões rigorosos de engenharia de software moderno no ecossistema Android, visando escalabilidade, testabilidade e manutenibilidade.
+
+## 🏗 Arquitetura de Software
+O aplicativo foi estruturado utilizando **Clean Architecture** em conjunto com o padrão de apresentação **MVVM (Model-View-ViewModel)**. A segregação de responsabilidades é dividida nas seguintes camadas:
+* **Presentation:** Interface de usuário reativa construída 100% com Jetpack Compose.
+* **Domain:** Regras de negócio encapsuladas, abstrações de repositórios e casos de uso (Use Cases).
+* **Data:** Implementação de repositórios, comunicação de rede (Retrofit/OkHttp) e persistência local (Room).
+
+## 🛠 Tech Stack e Bibliotecas
+* **Linguagem:** Kotlin 2.1.0
+* **Build System:** Gradle (Kotlin DSL / Version Catalogs `libs.versions.toml`)
+* **UI:** Jetpack Compose (BOM 2025.05.01) com suporte a Edge-to-Edge
+* **Injeção de Dependência:** Dagger Hilt
+* **Assincronismo e Concorrência:** Kotlin Coroutines & Flows
+* **Rede:** Retrofit, OkHttp e WebSockets
+* **Persistência de Dados:** Room Database
+* **Testes:** JUnit 4, MockK, Turbine, Espresso
+
+## 🚀 Compilação e Execução
+O projeto utiliza o Gradle Wrapper. Para compilar a variante de depuração localmente:
+\`\`\`bash
+./gradlew assembleDebug
+\`\`\`
+
+## 🔐 Implantação e Google Play
+
+O código-fonte é público sob a Licença MIT. No entanto, o artefato de produção (`release.aab`) e as chaves de assinatura criptográficas (`keystore.jks`) são mantidos em sigilo através de `gitignore` para garantir a integridade da distribuição oficial na Google Play Store.
+EOF
+```
+⚠️ **Atenção** Como este README é o "fechamento" da infraestrutura, agora você deve aplicar o ciclo GIT FLOW [✅]
+
+```bash
+# Adiciona o README  (se ainda não adicionou)
+git add README.md
+
+# Commit semântico de conclusão de seção
+git commit -m "docs: finalizar documentação de apresentação"
+
+# Sincroniza sua oficina com o GitHub
+git push origin develop
+
+```
+
+⚠️ **Atenção** Agora você vai levar esse trabalho para a sua ramificação principal (main)  [✅]
+
+```bash
+# Vai para a branch de produção
+git checkout main
+
+# Traz as mudanças da develop para a main
+git merge develop
+
+# Atualiza o GitHub
+git push origin main
+
+# MUITO IMPORTANTE: Volta para a develop para começar a próxima fase
+git checkout develop
+
+``` 
+
+### 4.6 Integração e Segurança para a Play Store [✅]
+
+É vital reiterar que a publicação na Play Store é gerida **exclusivamente por você**, mantida totalmente separada do repositório público. O GitHub armazena apenas a lógica da aplicação.
+
+Quando você estiver pronto para a Etapa de *Release* (que veremos mais à frente na Documentação):
+1. A assinatura do artefato final (APK/AAB) será feita na sua máquina local utilizando uma chave privada (`.jks`).
+2. Essa chave privada (`.jks`) e suas senhas (no arquivo `keystore.properties` ou em variáveis de ambiente) **NUNCA** devem ser enviadas ao GitHub. Nosso `.gitignore` já bloqueia esses arquivos.
+3. Isso garante que ninguém possa compilar uma versão assinada legítima do seu app e alterar o aplicativo oficial listado sob o seu perfil de desenvolvedor na loja do Google.
+
+### 4.7 Conventional Commits [✅]
 
 Sempre use mensagens de commit no padrão:
 

@@ -4,9 +4,9 @@ Este projeto foi dividido em 5 **Etapas de Desenvolvimento** lógicas, projetada
 
 ### **Etapa 1: Setup e Infraestrutura** (Neste Arquivo)
 1. Pré-requisitos e Instalação do Ambiente [✅]
-2. Criação e Configuração do Projeto
-3. Estrutura de Pastas do Projeto
-4. Configuração do Git e Git Flow
+2. Criação e Configuração do Projeto [✅]
+3. Estrutura de Pastas do Projeto [✅]
+4. Configuração do Git e Git Flow ( Documentação-05-Git-Flow.md deve ser seguida) [✅]
 5. Gradle: Dependências e Configurações
 6. Permissões no AndroidManifest.xml
 

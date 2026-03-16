@@ -2,7 +2,6 @@
 > **Parte 4**: Traduzindo o Protótipo HTML/CSS (Tailwind) para Jetpack Compose
 > Esta documentação detalha a conversão do design moderno (graus de *glassmorphism*, botões táteis e gradientes) em código Kotlin puro usando o Jetpack Compose.
 
----
 
 # 🎨 ETAPA 3: Interface Glassmorphism & UI
 Nesta etapa, traduzimos o protótipo HTML/CSS original em telas nativas do Android usando Jetpack Compose. Vamos criar os componentes táteis translúcidos e conectá-los com a lógica de rede da Etapa 2.
@@ -686,6 +685,28 @@ fun UniversalBottomNavBar(
         }
     }
 }
+```
+
+### 🔁 **O Ciclo do Git Flow (Fim da Camada de UI e Merge)**
+
+Incrível! As principais telas do aplicativo (Descoberta, Controle, Atalhos) e a navegação base inferior estão construídas em Jetpack Compose. Hora de juntar com a branch principal!
+
+```bash
+# 1. Adicione as novas telas e componentes que você criou nesta etapa
+git add app/src/main/java/com/antoniosilva/universaltvremote/presentation/screens/
+git add app/src/main/java/com/antoniosilva/universaltvremote/presentation/components/BottomNavBar.kt
+
+# 2. Commit semântico descrevendo as adições do protótipo
+git commit -m "feat(ui): implementar telas de exploração, controle principal e app shortcuts"
+
+# 3. Volte para a branch de integração
+git checkout develop
+
+# 4. Incorpore (merge) a feature desenvolvida
+git merge feature/ui-compose
+
+# 5. Mande para o GitHub em segurança
+git push origin develop
 ```
 
 ---

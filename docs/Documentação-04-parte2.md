@@ -1,4 +1,4 @@
----
+
 
 # 🏗️ ETAPA 2: Arquitetura e Comunicação de TVs
 Nesta etapa, implementaremos a espinha dorsal do aplicativo. Utilizaremos **MVVM + Clean Architecture** para isolar a UI da lógica de rede. Depois, construiremos os serviços que descobrem TVs na rede Wi-Fi (usando mDNS) e as classes (Connectors) que sabem conversar com LG, Samsung e Roku.
@@ -178,6 +178,22 @@ data class TvApp(
     val name: String,
     val iconUrl: String? = null
 )
+```
+
+### 🔁 **O Ciclo do Git Flow (Camada de Domínio)**
+
+Como você acabou de implementar a base de contratos e modelos (a parte mais isolada do seu app), é o momento ideal para fazer o primeiro commit isolado em uma nova *feature branch*.
+
+```bash
+# 1. Crie uma branch específica para construir o motor do app
+git checkout -b feature/core-network
+
+# 2. Adicione os novos arquivos do domínio à área (staging)
+git add app/src/main/java/com/antoniosilva/universaltvremote/domain/
+git add app/src/main/java/com/antoniosilva/universaltvremote/UniversalTVRemoteApp.kt
+
+# 3. Registre o que foi feito com um commit semântico
+git commit -m "feat(domain): adicionar modelos de TV, comandos e interfaces de repositório"
 ```
 
 ---
@@ -967,6 +983,21 @@ class PairedTvRepository @Inject constructor(
 }
 ```
 
+### 🔁 **O Ciclo do Git Flow (Camada de Dados)**
+
+Pronto! Você terminou a espinha dorsal de comunicação (Descoberta, Conectores e Banco de Dados Local). Vamos salvar esse progresso na nossa branch.
+
+```bash
+# 1. Adicione a pasta "data" à área (staging)
+git add app/src/main/java/com/antoniosilva/universaltvremote/data/
+
+# 2. Registre as alterações
+git commit -m "feat(data): implementar conectores de TV (Samsung, LG, Roku), mDNS e Room DB"
+
+# 3. Envie a branch atual para backup e histórico no GitHub
+git push -u origin feature/core-network
+```
+
 ---
 
 ## 12. Interface do Usuário com Jetpack Compose
@@ -1509,4 +1540,25 @@ object AppModule {
         database.pairedTvDao()
 }
 ```
+
+### 🔁 **O Ciclo do Git Flow (Fim da Etapa e Merge)**
+
+Chegamos ao final da **Etapa 2**. Toda a arquitetura MVVM, DI com Hilt e UI base foram criadas. Chegou a hora de registrar isso e juntar (*merge*) nossa branch `feature/core-network` de volta à branch principal de desenvolvimento (`develop`).
+
+```bash
+# 1. Faça o commit final da camada de apresentação (ViewModels e Hilt DI)
+git add app/src/main/java/com/antoniosilva/universaltvremote/presentation/
+git add app/src/main/java/com/antoniosilva/universaltvremote/di/
+git commit -m "feat(presentation): adicionar ViewModels, telas e injeção do Hilt"
+
+# 2. Mude de volta para a branch de integração contínua (develop)
+git checkout develop
+
+# 3. Traga (merge) as novidades finalizadas da feature para a develop
+git merge feature/core-network
+
+# 4. Envie a develop atualizada para o repositório remoto (GitHub)
+git push origin develop
+```
+
 

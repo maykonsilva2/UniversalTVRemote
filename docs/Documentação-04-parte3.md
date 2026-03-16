@@ -1,4 +1,3 @@
----
 
 # 🗄️ ETAPA 4: Banco de Dados e App Completo (Seções 11 a 14 na Parte Anterior)
 *(Nota: a Persistência Room e os ViewModels da Etapa 4 se juntam à Etapa 2 e Etapa 3)*
@@ -197,6 +196,27 @@ class RemoteControlScreenTest {
         composeRule.onNodeWithText("Buscando TVs na rede...").assertIsDisplayed()
     }
 }
+```
+
+### 🔁 **O Ciclo do Git Flow (Testes)**
+
+Garantir a qualidade do código com testes automatizados é o pilar de uma boa engenharia. Vamos registrar isso!
+
+```bash
+# 1. Crie a branch para consolidar a suíte de testes
+git checkout -b feature/tests
+
+# 2. Adicione os arquivos de teste (unitários e instrumentados) à área de staging
+git add app/src/test/
+git add app/src/androidTest/
+
+# 3. Commit semântico descrevendo a adição da bateria de testes
+git commit -m "test: adicionar testes para ViewModels, Conectores Mocks e UI Compose"
+
+# 4. Traga a bateria de testes de volta para a principal (develop) e envie
+git checkout develop
+git merge feature/tests
+git push origin develop
 ```
 
 ---
@@ -571,6 +591,33 @@ apksigner verify --verbose app/build/outputs/apk/release/app-release.apk
    - **Privacy policy**: URL da sua política (ex.: GitHub Pages)
 5. Em **Production → Releases**, faça upload do `.aab`
 6. Envie para revisão (leva de 1 a 7 dias)
+
+### 🔁 **O Ciclo do Git Flow (Release e Produção)**
+
+Chegou o grande momento! Sua aplicação está pronta, testada e com *pipelines* (CI/CD) preparados no GitHub. O último passo do Git Flow é integrar todo o código consolidado na `develop` diretamente na ambiente de produção (`main`) marcando a versão oficial.
+
+```bash
+# 1. Adicione a infraestrutura Dev Ops à develop
+git add docker/
+git add .github/
+git commit -m "ci: configurar Docker, TV Simulator base e GitHub Actions"
+
+# 2. Vá para a branch principal de Produção (A branch mais sagrada)
+git checkout main
+
+# 3. Traga TODO o aplicativo validado da develop para a main
+git merge develop
+
+# 4. Crie uma Etiqueta (Tag de Versão). Isso ativa automaticamente o GitHub Actions Release!
+git tag -a v1.0.0 -m "Release Oficial 1.0.0: TV Remote Completo"
+
+# 5. Envie a main E as tags para o repositório remoto
+git push origin main
+git push origin v1.0.0
+
+# 6. Volte para a develop para iniciar o próximo ciclo de desenvolvimento no futuro
+git checkout develop
+```
 
 ---
 
