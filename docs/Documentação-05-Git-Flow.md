@@ -115,3 +115,71 @@ git stash
 # Restaura as alterações arquivadas (abre a "gaveta") de volta na sua área de trabalho
 git stash pop
 ```
+
+
+
+⚠️ **Atenção como fazer hotfix**
+
+A operação de hotfix constitui um procedimento arquitetural de emergência no modelo Git Flow. Ela é invocada exclusivamente quando uma falha crítica é identificada no ambiente de produção (a ramificação main) e exige resolução imediata, ignorando o ciclo de desenvolvimento padrão da ramificação develop.
+
+Abaixo, detalha-se o protocolo técnico e a sequência exata de comandos para instanciar, executar e finalizar uma ramificação de hotfix para corrigir um artefato (como o README.md).
+
+Protocolo de Execução de Hotfix
+1. Instanciação a partir da Produção
+O primeiro passo exige a alteração do ponteiro HEAD do Git para a ramificação main, garantindo que a base da correção seja o código exato que está público no repositório.
+
+```bash
+# Alterna para a ramificação de produção
+git checkout main
+
+# Sincroniza o estado local com o servidor remoto para garantir a paridade
+git pull origin main
+
+# Cria a ramificação de emergência e altera o contexto de trabalho
+git checkout -b hotfix/correcao-readme
+
+#2. Execução e Registro (Commit) Neste estado isolado, você realiza a modificação necessária no arquivo README.md através da sua IDE ou editor de texto. Após a correção, o artefato deve ser registrado no histórico.
+```
+
+```bash
+# Adiciona o arquivo corrigido à área de preparação (Staging Area)
+git add README.md
+
+# Registra a alteração com a semântica apropriada
+git commit -m "fix: corrigir erro tipografico critico na documentacao principal"
+
+#3. Fusão e Promoção (Merge para main) Com a anomalia resolvida no escopo do hotfix, a correção deve ser promovida de volta para o ambiente de produção.
+```
+
+```bash
+# Retorna para a ramificação principal
+git checkout main
+
+# Funde a correção no histórico da produção
+git merge hotfix/correcao-readme
+
+# Envia o estado atualizado para o servidor GitHub
+git push origin main
+
+#4. Sincronização Reversa (Backporting para develop) Este é o passo arquitetural mais crítico do Git Flow. A correção aplicada na main deve ser obrigatoriamente replicada na ramificação develop. Caso esta etapa seja omitida, o erro retornará à produção no próximo lançamento (Release), gerando uma regressão de software.
+```
+
+```bash
+# Alterna para a ramificação de integração contínua
+git checkout develop
+
+# Sincroniza o ambiente de desenvolvimento com a correção aplicada
+git merge hotfix/correcao-readme
+
+# Envia a atualização para o servidor
+git push origin develop
+
+#5. Exclusão da Ramificação Efêmera Após garantir a integridade estrutural em ambas as ramificações perenes (main e develop), o escopo temporário do hotfix deve ser descartado.
+```
+
+```bash
+# Remove a ramificação de emergência do sistema de arquivos local
+git branch -d hotfix/correcao-readme
+```
+
+Este fluxo garante a manutenção da estabilidade do código e a auditoria rigorosa do histórico de versões.
