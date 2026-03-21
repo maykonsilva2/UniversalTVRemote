@@ -181,3 +181,31 @@ git branch -d hotfix/correcao-readme
 ```
 
 Este fluxo garante a manutenção da estabilidade do código e a auditoria rigorosa do histórico de versões.
+
+
+# Abordagem Recomendada: O "WIP" Contínuo (Amend)
+
+Execute  o seguinte fluxo no terminal para atualizar o seu salvamento parcial:
+
+```bash
+### 1. Mapeia as novas alterações incompletas
+git add nome-do-arquivo
+
+### 2. Funde as novas alterações ao commit WIP existente
+git commit --amend -m "prefixo: WIP commit message"
+
+### 3. Sobrescreve o backup na nuvem de forma segura
+git push origin nome-da-feature --force-with-lease
+```
+
+### Fundamentação da Execução:
+Ao utilizar o --amend sucessivamente, você mantém um único nó na árvore do Git, que vai "crescendo" a cada dia de trabalho.
+
+Quando você finalmente concluir o arquivo, basta executar o mesmo comando pela última vez, mas alterando a mensagem para remover a sigla "WIP":
+
+```bash
+git commit --amend -m "prefixo: commit message"
+git push origin nome-da-feature --force-with-lease
+```
+
+Desta forma, independentemente de quantos dias a tarefa demande, o histórico final exibirá apenas um único registro atômico e profissional.

@@ -502,9 +502,9 @@ refactor: extrair lógica de WebSocket para classe base
 
 ---
 
-## 5. Gradle: Dependências e Configurações
+## 5. Gradle: Dependências e Configurações [✅]
 
-### 5.1 Catálogo de versões — `gradle/libs.versions.toml`
+### 5.1 Catálogo de versões — `gradle/libs.versions.toml` [✅]
 
 Crie ou substitua o arquivo `gradle/libs.versions.toml`:
 
@@ -601,11 +601,12 @@ compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 ```
 
-### 5.2 `settings.gradle.kts` (raiz do projeto)
+### 5.2 `settings.gradle.kts` (raiz do projeto) [✅]
 
 ```kotlin
 pluginManagement {
@@ -628,23 +629,25 @@ rootProject.name = "UniversalTVRemote"
 include(":app")
 ```
 
-### 5.3 `build.gradle.kts` (raiz do projeto)
+### 5.3 `build.gradle.kts` (raiz do projeto) [✅]
 
 ```kotlin
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.ksp) apply false
 }
 ```
 
-### 5.4 `app/build.gradle.kts` (módulo app)
+### 5.4 `app/build.gradle.kts` (módulo app) [✅]
 
 ```kotlin
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
 }
@@ -694,8 +697,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            // Configuração de assinatura (seção 18)
-            signingConfig = signingConfigs.getByName("release")
+            // Configuração de assinatura (seção 18 - Documentação)
+            // TODO: Implementar assinatura de release:  Como a chave criptográfica (.jks) ainda não foi provisionada no sistema de arquivos local, a sua invocação abortará a sincronização do Gradle. Mantenha comentado por enquanto Na IDE quando
+           signingConfig = signingConfigs.getByName("release")
         }
         debug {
             isDebuggable = true
@@ -717,21 +721,20 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
+    // Depreciado desde o Kotlin 2.0, nova forma abaixo (DECLARAÇÃO DO COMPILADOR KOTLIN (K2) - Nova Estrutura)
+    //kotlinOptions {
+    //    jvmTarget = "17"
+    //}
 
     buildFeatures {
         compose = true
         buildConfig = true
     }
 
-    composeOptions {
-        // Com Kotlin 2.1.x, a versão do compilador Compose é gerenciada
-        // automaticamente pelo Compose BOM. Não é mais necessário declarar
-        // kotlinCompilerExtensionVersion manualmente quando se usa BOM 2025.x.
-        kotlinCompilerExtensionVersion = "1.5.15" // Usamos esta caso remova o BOM
-    }
+    // A partir do Kotlin 2.0+, o compilador do Jetpack Compose é gerido
+    // nativamente pelo plugin org.jetbrains.kotlin.plugin.compose,
+    // garantindo compatibilidade automática com a versão do Kotlin (K2).
+    // O antigo bloco 'composeOptions' foi removido porque não é mais necessário.
 
     packaging {
         resources {
@@ -740,6 +743,13 @@ android {
         }
     }
 }
+
+    // DECLARAÇÃO DO COMPILADOR KOTLIN (K2) - Nova Estrutura
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
+    }
 
 dependencies {
     // === ANDROIDX CORE & LIFECYCLE ===
