@@ -811,7 +811,7 @@ dependencies {
 
 ---
 
-## 6. Permissões no AndroidManifest.xml
+## 6. Permissões no AndroidManifest.xml [✅]
 
 Abra `app/src/main/AndroidManifest.xml` e adicione as permissões necessárias:
 
@@ -888,22 +888,40 @@ Abra `app/src/main/AndroidManifest.xml` e adicione as permissões necessárias:
 </manifest>
 ```
 
-> ⚠️ **Network Security Config** — Para produção, crie `res/xml/network_security_config.xml` para especificar quais domínios/IPs podem usar HTTP simples, em vez de `usesCleartextTraffic="true"` global:
+> ⚠️ **Network Security Config** — Para produção, crie `res/xml/network_security_config.xml` para assegurar conexões HTTP na rede local sem prejudicar a segurança de APIs externas.
+> O Android **não suporta intervalos de IP (ex: 192.168.1.*)** na tag `<domain>`. Usar `192.168.1.0` causa **CRASH** ao bater num IP diferente. A abordagem profissional é permitir HTTP na base (para as TVs) e blindar domínios específicos (ou o client OkHttp):
 
 ```xml
 <!-- res/xml/network_security_config.xml -->
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <!-- Permite HTTP apenas na rede local (192.168.x.x, 10.x.x.x) -->
-    <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="false">192.168.1.0</domain>
-    </domain-config>
-    <!-- Todo o resto usa HTTPS -->
-    <base-config cleartextTrafficPermitted="false" />
+    <!-- 1. Permite HTTP para IPs desconhecidos da rede local (necessário para IoT) -->
+    <base-config cleartextTrafficPermitted="true" />
 </network-security-config>
 ```
+
+> **🛡️ Dica DevSecOps para a Etapa 2 (Rede):** Como o XML acima afrouxa a regra base, a prática da indústria IoT é criar um **Interceptor no OkHttp**. Esse interceptador cancela a conexão e lança uma `SecurityException` se detectar que o protocolo for `http://` E o IP de destino não começar com prefixos privados da LAN (como `192.168.`, `10.` ou `172.16-31.`). Isso evita que requisições HTTP vazem para a Internet sem a proteção do HTTPS.
 
 E no `AndroidManifest.xml`, substitua `usesCleartextTraffic` por:
 ```xml
 android:networkSecurityConfig="@xml/network_security_config"
+```
+
+**Observação:** Esse bloco é apenas um exemplo, para mostrar como você bloquearia o texto plano de uma API externa caso decida usar uma no futuro. Para o projeto atual, o `base-config` é suficiente.
+
+```xml
+<!-- res/xml/network_security_config.xml -->
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+
+
+
+    <!-- 2. TODO O RESTO DEVE USAR HTTPS! (Segurança contra downgrade MITM)
+         Opcional: Se seu app vai consultar uma API pública 
+         (ex: TheMovieDB), bloqueie o HTTP nela explicitamente definindo `false` abaixo. -->
+    <domain-config cleartextTrafficPermitted="false">
+        <!-- Exemplo: <domain includeSubdomains="true">api.themoviedb.org</domain> -->
+        <domain includeSubdomains="true">api.algumservidor.com</domain>
+    </domain-config>
+</network-security-config>
 ```

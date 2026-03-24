@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- 1. Permite HTTP para IPs desconhecidos da rede local (necessário para IoT) -->
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>
+
+<!--
+  Como o XML acima afrouxa a regra base, a prática da indústria IoT é criar um **Interceptor no
+  OkHttp**. Esse interceptador cancela a conexão e lança uma `SecurityException` se detectar que o
+  protocolo for `http://` E o IP de destino não começar com prefixos privados da LAN
+  (como `192.168.`, `10.` ou `172.16-31.`). Isso evita que requisições HTTP vazem para a Internet
+  sem a proteção do HTTPS.
+
+E no `AndroidManifest.xml`, substitua `usesCleartextTraffic` por:
+```xml
+android:networkSecurityConfig="@xml/network_security_config"
+```
+
+ -->
