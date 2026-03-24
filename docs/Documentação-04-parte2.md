@@ -1494,7 +1494,8 @@ class RemoteControlViewModel @Inject constructor(
 
 ## 14. Injeção de Dependência com Hilt
 
-Crie `di/AppModule.kt`:
+Crie `di/AppModule.kt`. 
+> **🛡️ Segurança de Rede:** Na Etapa 1 configuramos o `network_security_config.xml` para aceitar HTTP na rede local. Para blindar o app contra vulnerabilidades, o código abaixo introduz o `LocalNetworkSecurityInterceptor`. Esse interceptor garante que requisições HTTP sem criptografia sejam abortadas caso o destino seja externo (Internet pública), protegendo contra ataques *Man-in-the-Middle* (MitM).
 
 ```kotlin
 package com.antoniosilva.universaltvremote.di
@@ -1508,10 +1509,31 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+
+class LocalNetworkSecurityInterceptor : Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val request = chain.request()
+        val isHttp = request.url.scheme == "http"
+        val host = request.url.host
+
+        // Considera rede privada (10.x.x.x, 172.16-31.x.x, 192.168.x.x) ou Localhost
+        val isPrivateIp = host.startsWith("192.168.") || 
+                          host.startsWith("10.") || 
+                          host.startsWith("127.0.")
+        
+        if (isHttp && !isPrivateIp) {
+            throw SecurityException("Bloqueado MitM: Tráfego HTTP não criptografado só é permitido para IPs locais privados. Host suspeito: $host")
+        }
+        
+        return chain.proceed(request)
+    }
+}
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -1522,6 +1544,7 @@ object AppModule {
     fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)
+        .addInterceptor(LocalNetworkSecurityInterceptor()) // Trava de Segurança
         .addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         })

@@ -2,7 +2,42 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Acesso à Internet (obrigatório para WebSocket e HTTP) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Estado do Wi-Fi -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+    <!-- Multicast (necessário para mDNS / descoberta de dispositivos) -->
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+
+    <!-- Estado da rede -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!--
+    🛡️ SEGURANÇA / CASO EXTREMO:
+    Android 13+ (API 33+): A permissão NEARBY_WIFI_DEVICES é uma 'runtime permission'.
+    Seu app DEVE solicitar essa permissão explicitamente ao usuário através da UI
+    (no Compose via accompanist-permissions ou ActivityResultLauncher) ANTES de
+    tentar buscar dispositivos com NsdManager/mDNS.
+    Se você apenas declarar aqui e não pedir, em dispositivos com Android 13 ou superior
+    (como o Galaxy S21 FE e POCO Pad), o app sofrerá um SecurityException e vai dar CRASH.
+    -->
+    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES"
+        android:usesPermissionFlags="neverForLocation"
+        tools:targetApi="s" />
+
+    <!--
+    Android 9 e abaixo: Localização necessária para descoberta de rede.
+    maxSdkVersion="28" garante que NÃO será pedido no Android 9+
+    -->
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:maxSdkVersion="28" />
+
     <application
+        android:name=".UniversalTVRemoteApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -10,15 +45,31 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.UniversalTVRemote">
+        android:theme="@style/Theme.UniversalTVRemote"
+        android:networkSecurityConfig="@xml/network_security_config">
+
+        <!--
+            🛡️ SEGURANÇA VITAL PARA PRODUÇÃO:
+            Evite usar android:usesCleartextTraffic="true" na tag <application> pois isso
+            libera conexões HTTP inseguras para o aplicativo todo, abrindo brechas
+            graves para ataques Man-in-the-Middle (MitM).
+            Como algumas TVs (ex: Roku, LG porta 3000) requerem de fato HTTP simples, a
+            maneira correta e segura de fazer isso é remover o usesCleartextTraffic daqui e
+            obrigatoriamente usar o network_security_config.xml para permitir HTTP
+            APENAS em IPs da rede local (192.168.x.x / 10.x.x.x).
+        -->
+
+        <!--
+            O caminho da Activity .presentation.MainActivity": Como estamos utilizando
+             Clean Architecture, a nossa tela principal não ficará solta na raiz do projeto,
+              ela será movida para a camada de apresentação (presentation).
+         -->
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.UniversalTVRemote">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
