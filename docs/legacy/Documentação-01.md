@@ -301,7 +301,7 @@ detekt = { id = "io.gitlab.arturbosch.detekt", version = "1.23.3" }
 
 ### 3.1 Módulo Core (Contratos e Utilidades)
 
-**`core/src/main/java/com/tvremote/core/model/TVDevice.kt`**:
+**`core/src/main/java/com/tvremote/core/model/TvDevice.kt`**:
 ```kotlin
 package com.tvremote.core.model
 

@@ -44,9 +44,9 @@ UI (recomposição)
 
 ---
 
-## 8. Módulo Core — Modelos e Contratos
+## 8. Módulo Core — Modelos e Contratos [✅]
 
-### 8.1 Criar classe Application com Hilt
+### 8.1 Criar classe Application com Hilt [✅]
 
 Crie `app/src/main/java/com/antoniosilva/universaltvremote/UniversalTVRemoteApp.kt`:
 
@@ -60,7 +60,7 @@ import dagger.hilt.android.HiltAndroidApp
 class UniversalTVRemoteApp : Application()
 ```
 
-### 8.2 Modelo de dispositivo TV
+### 8.2 Modelo de dispositivo TV [✅]
 
 #### Atenção:
 Todo e qualquer arquivo Kotlin que você criar a partir de agora deverá ser posicionado a partir deste diretório absoluto:
@@ -82,8 +82,10 @@ data class TvDevice(
     val model: String? = null,
     val isPaired: Boolean = false,
     
-    // 🛡️ SEGURANÇA: NUNCA salve tokens ou chaves em texto plano (SharedPreferences ou Room livre) em Produção.
-    // Use androidx.security:security-crypto (EncryptedSharedPreferences) para persistir dados sensíveis.
+    // 🛡️ SEGURANÇA: Em produção, tokens e chaves não devem ser salvos em texto plano (SharedPreferences ou Room).
+    // Recomenda-se o uso de 'androidx.security:security-crypto' para persistência cifrada de dados sensíveis.
+    // Para fins didáticos, este projeto foca na Clean Architecture e Hilt; a persistência será feita 
+    // via Room Database (Seção 11 da documentação) de forma simples, deixando a criptografia como uma melhoria futura.
     val authToken: String? = null
 )
 
@@ -97,7 +99,7 @@ enum class TvBrand {
 }
 ```
 
-### 8.3 Sealed class de comandos
+### 8.3 Sealed class de comandos [✅]
 
 Crie `domain/model/TvCommand.kt`:
 
@@ -139,27 +141,44 @@ sealed class TvCommand {
     // Entrada de texto
     data class SendText(val text: String) : TvCommand()
 
-    // Abrir aplicativo
+    // Abrir / Iniciar aplicativo que já está instalado na TV, como Netflix, Youtube, Prime Video, etc.
     data class LaunchApp(val appId: String) : TvCommand()
 }
 ```
 
-### 8.4 Estado de conexão
+### 8.4 Estado de conexão [✅]
 
 Crie `domain/model/ConnectionState.kt`:
 
 ```kotlin
 package com.antoniosilva.universaltvremote.domain.model
 
+/**
+ * Sealed Class ConnectionState (Estado da Conexão)
+ * Representa todas as situações possíveis entre o Celular e a TV.
+ * Por ser 'sealed', o compilador garante que trataremos todos os casos na UI.
+ */
 sealed class ConnectionState {
+
+    // Estado atômico (object): Indica que o app não está tentando se comunicar com nenhuma TV.
+    // Usado como estado inicial ou após o usuário clicar em "Desconectar".
     object Disconnected : ConnectionState()
+
+    // Estado atômico (object): Indica que o app iniciou o 'handshake' com a TV.
+    // Usado para exibir o Spinner (ícone de carregamento) na tela.
     object Connecting : ConnectionState()
+
+    // Estado com dados (data class): Indica sucesso na conexão.
+    // Carrega o objeto 'TvDevice' para que a UI saiba o nome e o IP da TV conectada.
     data class Connected(val device: TvDevice) : ConnectionState()
+
+    // Estado com dados (data class): Indica que algo deu errado (Ex: Wi-Fi caiu ou senha errada).
+    // Carrega a 'message' técnica para ser exibida em um alerta ou Snackbar para o usuário.
     data class Error(val message: String) : ConnectionState()
 }
 ```
 
-### 8.5 Interface do repositório (contrato)
+### 8.5 Interface do repositório (contrato) [✅]
 
 Crie `domain/repository/TvRemoteRepository.kt`:
 
@@ -171,46 +190,50 @@ import com.antoniosilva.universaltvremote.domain.model.TvCommand
 import com.antoniosilva.universaltvremote.domain.model.TvDevice
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Interface TvRemoteRepository (Contrato de Domínio)
+ * Define O QUE o sistema faz, sem se preocupar com o COMO (Samsung, LG ou Roku).
+ */
 interface TvRemoteRepository {
+
+    // Retorna um Fluxo Reativo (Flow) que emite mudanças de estado da conexão em tempo real.
+    // Permite que a UI "escute" se a TV desconectou ou se houve erro sem travar o app.
     fun connectionState(): Flow<ConnectionState>
+
+    // Função Suspensa: Inicia o processo de conexão e autenticação com a TV.
+    // O 'Result<Unit>' indica sucesso ou falha na tentativa de conexão.
     suspend fun connect(device: TvDevice): Result<Unit>
+
+    // Encerra a conexão WebSocket ou HTTP ativa com o dispositivo.
     suspend fun disconnect()
+
+    // Envia um comando (Power, Volume, etc.) para a TV.
+    // É 'suspend' porque a rede pode demorar a responder.
     suspend fun sendCommand(command: TvCommand): Result<Unit>
+
+    // Busca a lista de aplicativos instalados na TV (Netflix, YouTube, etc.).
+    // Retorna uma lista de objetos TvApp encapsulada em um Result.
     suspend fun getInstalledApps(): Result<List<TvApp>>
 }
 
+/**
+ * Modelo de dados para representar um aplicativo dentro da Smart TV.
+ */
 data class TvApp(
-    val id: String,
-    val name: String,
-    val iconUrl: String? = null
+    val id: String,      // Identificador único do app na TV (ex: "youtube")
+    val name: String,    // Nome exibido ao usuário
+    val iconUrl: String? = null // Link opcional para o ícone do aplicativo
 )
 ```
-
-### 🔁 **O Ciclo do Git Flow (Camada de Domínio)**
-
-Como você acabou de implementar a base de contratos e modelos (a parte mais isolada do seu app), é o momento ideal para fazer o primeiro commit isolado em uma nova *feature branch*.
-
-```bash
-# 1. Crie uma branch específica para construir o motor do app
-git checkout -b feature/core-network
-
-# 2. Adicione os novos arquivos do domínio à área (staging)
-git add app/src/main/java/com/antoniosilva/universaltvremote/domain/
-git add app/src/main/java/com/antoniosilva/universaltvremote/UniversalTVRemoteApp.kt
-
-# 3. Registre o que foi feito com um commit semântico
-git commit -m "feat(domain): adicionar modelos de TV, comandos e interfaces de repositório"
-```
-
----
-
 ## 9. Descoberta de Dispositivos na Rede
 
 O app usa **NsdManager** (API nativa Android) para descoberta via mDNS, sem biblioteca externa.
 
 ### 9.1 Serviço de descoberta
 
-Crie `data/remote/discovery/TvDiscoveryService.kt`:
+
+Crie `data/remote/discovery/TvDiscoveryService.kt`
+Caminho absoluto: `app/src/main/java/com/antoniosilva/universaltvremote/data/remote/discovery/TvDiscoveryService.kt`
 
 ```kotlin
 package com.antoniosilva.universaltvremote.data.remote.discovery
