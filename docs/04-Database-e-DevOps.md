@@ -141,7 +141,7 @@ class RokuConnectorTest {
         )
 
         connector.connect(device)
-        val result = connector.sendCommand(TvCommand.VolumeUp) # Executa Comando
+        val result = connector.sendCommand(TvCommand.VolumeUp) // Executa Comando
 
         assertTrue(result.isSuccess)
         

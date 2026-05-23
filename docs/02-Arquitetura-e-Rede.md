@@ -98,37 +98,40 @@ Crie `domain/model/TvCommand.kt`:
 ```kotlin
 package com.antoniosilva.universaltvremote.domain.model
 
+// ✅ KOTLIN 2.1.0: 'data object' (estabilizado no Kotlin 1.9+) é obrigatório para objetos dentro de
+// sealed classes nesta versão. Gera toString() legível (ex: "PowerOn" em vez de "TvCommand$PowerOn@1a2b"),
+// o que facilita o debug e o logging.
 sealed class TvCommand {
     // Energia
-    object PowerOn : TvCommand()
-    object PowerOff : TvCommand()
+    data object PowerOn : TvCommand()
+    data object PowerOff : TvCommand()
 
     // Volume
-    object VolumeUp : TvCommand()
-    object VolumeDown : TvCommand()
-    object Mute : TvCommand()
+    data object VolumeUp : TvCommand()
+    data object VolumeDown : TvCommand()
+    data object Mute : TvCommand()
 
     // Canais
-    object ChannelUp : TvCommand()
-    object ChannelDown : TvCommand()
+    data object ChannelUp : TvCommand()
+    data object ChannelDown : TvCommand()
     data class ChannelNumber(val number: Int) : TvCommand()
 
     // Navegação D-Pad
-    object Up : TvCommand()
-    object Down : TvCommand()
-    object Left : TvCommand()
-    object Right : TvCommand()
-    object Ok : TvCommand()
-    object Back : TvCommand()
-    object Home : TvCommand()
-    object Menu : TvCommand()
+    data object Up : TvCommand()
+    data object Down : TvCommand()
+    data object Left : TvCommand()
+    data object Right : TvCommand()
+    data object Ok : TvCommand()
+    data object Back : TvCommand()
+    data object Home : TvCommand()
+    data object Menu : TvCommand()
 
     // Mídia
-    object Play : TvCommand()
-    object Pause : TvCommand()
-    object Stop : TvCommand()
-    object FastForward : TvCommand()
-    object Rewind : TvCommand()
+    data object Play : TvCommand()
+    data object Pause : TvCommand()
+    data object Stop : TvCommand()
+    data object FastForward : TvCommand()
+    data object Rewind : TvCommand()
 
     // Entrada de texto
     data class SendText(val text: String) : TvCommand()
@@ -145,9 +148,32 @@ Crie `domain/model/ConnectionState.kt`:
 ```kotlin
 package com.antoniosilva.universaltvremote.domain.model
 
+<<<<<<< Updated upstream
 sealed class ConnectionState {
     object Disconnected : ConnectionState()
     object Connecting : ConnectionState()
+=======
+/**
+ * Sealed Class ConnectionState (Estado da Conexão)
+ * Representa todas as situações possíveis entre o Celular e a TV.
+ * Por ser 'sealed', o compilador garante que trataremos todos os casos na UI.
+ */
+// ✅ KOTLIN 2.1.0: 'data object' (estabilizado no Kotlin 1.9+) é obrigatório para objetos dentro de
+// sealed classes nesta versão. Gera toString() legível (ex: "Disconnected" em vez de
+// "ConnectionState$Disconnected@1a2b"), o que facilita o debug e o logging.
+sealed class ConnectionState {
+
+    // Estado atômico (data object): Indica que o app não está tentando se comunicar com nenhuma TV.
+    // Usado como estado inicial ou após o usuário clicar em "Desconectar".
+    data object Disconnected : ConnectionState()
+
+    // Estado atômico (data object): Indica que o app iniciou o 'handshake' com a TV.
+    // Usado para exibir o Spinner (ícone de carregamento) na tela.
+    data object Connecting : ConnectionState()
+
+    // Estado com dados (data class): Indica sucesso na conexão.
+    // Carrega o objeto 'TvDevice' para que a UI saiba o nome e o IP da TV conectada.
+>>>>>>> Stashed changes
     data class Connected(val device: TvDevice) : ConnectionState()
     data class Error(val message: String) : ConnectionState()
 }
@@ -163,15 +189,51 @@ package com.antoniosilva.universaltvremote.domain.repository
 import com.antoniosilva.universaltvremote.domain.model.ConnectionState
 import com.antoniosilva.universaltvremote.domain.model.TvCommand
 import com.antoniosilva.universaltvremote.domain.model.TvDevice
+// ✅ ARQUITETURA: TvApp é um modelo de domínio e pertence ao pacote domain.model,
+// não ao domain.repository. Importamos de lá para manter a separação correta.
+import com.antoniosilva.universaltvremote.domain.model.TvApp
 import kotlinx.coroutines.flow.Flow
 
+<<<<<<< Updated upstream
+=======
+/**
+ * Interface TvRemoteRepository (Contrato de Domínio)
+ * Define O QUE o sistema faz, sem se preocupar com o COMO (Samsung, LG ou Roku).
+ *
+ * NOTA ARQUITETURAL: Esta interface define o contrato de alto nível do domínio.
+ * A implementação concreta é o TvConnectorFactory (seção 10.5), que delega
+ * cada chamada ao conector correto (Samsung, LG ou Roku) com base na marca da TV.
+ */
+>>>>>>> Stashed changes
 interface TvRemoteRepository {
     fun connectionState(): Flow<ConnectionState>
     suspend fun connect(device: TvDevice): Result<Unit>
     suspend fun disconnect()
     suspend fun sendCommand(command: TvCommand): Result<Unit>
+<<<<<<< Updated upstream
+=======
+
+    // Busca a lista de aplicativos instalados na TV (Netflix, YouTube, etc.).
+    // Retorna uma lista de objetos TvApp encapsulada em um Result.
+    // NOTA: Para implementar esta função, o TvConnector (seção 10.1) também
+    // precisa expor um método getInstalledApps() que cada conector (Samsung,
+    // LG, Roku) implementará com sua respectiva API.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
     suspend fun getInstalledApps(): Result<List<TvApp>>
 }
+```
+
+### 8.5.1 Modelo TvApp [✅]
+
+> **⚠️ ARQUITETURA:** `TvApp` é um **modelo de domínio** e deve residir em `domain/model/`, assim como `TvDevice`, `TvCommand` e `ConnectionState`. Colocá-la no pacote `domain.repository` seria semanticamente incorreto — modelos de dados não pertencem ao pacote de contratos de repositório.
+
+Crie `domain/model/TvApp.kt`:
+
+```kotlin
+package com.antoniosilva.universaltvremote.domain.model
 
 data class TvApp(
     val id: String,
@@ -408,6 +470,10 @@ class DiscoveryViewModel @Inject constructor(
                 _uiState.update { it.copy(pairedDevices = paired) }
             }
         }
+    } // ✅ CORREÇÃO: Fechamento do bloco init. Sem este '}', as funções startScan(),
+      // stopScan() e onCleared() seriam capturadas DENTRO do init, o que é Kotlin inválido
+      // e causaria uma falha de compilação imediata.
+
     // Inicia a busca contínua por TVs
     fun startScan() {
         discoveryJob?.cancel() // Cancela busca anterior (se houver) para evitar vazamento de memória
@@ -485,7 +551,14 @@ import org.json.JSONObject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class SamsungConnector @Inject constructor() : TvConnector {
+// ✅ SEGURANÇA / CORREÇÃO: O OkHttpClient é injetado pelo Hilt (configurado em AppModule)
+// em vez de ser criado aqui dentro. Isso garante que o LocalNetworkSecurityInterceptor
+// definido em AppModule seja aplicado a TODAS as conexões, incluindo as Samsung.
+// As configurações específicas do WebSocket (readTimeout, pingInterval) são aplicadas
+// na hora de criar o WebSocket, não no cliente base.
+class SamsungConnector @Inject constructor(
+    private val client: OkHttpClient
+) : TvConnector {
 
     private var webSocket: WebSocket? = null
     private val _state = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
@@ -496,12 +569,17 @@ class SamsungConnector @Inject constructor() : TvConnector {
         Base64.DEFAULT
     ).trim()
 
-    private val client = OkHttpClient.Builder()
+    // ✅ CORREÇÃO: O cliente WebSocket dedicado (com timeout zero e ping) é derivado
+    // do cliente injetado, preservando o interceptor de segurança e adicionando
+    // as configurações específicas para manter o WebSocket vivo.
+    // ⚡ PERFORMANCE / ESTABILIDADE: O pingInterval mantém o WebSocket vivo por trás dos panos
+    // (evita que a TV corte a conexão por inatividade).
+    // 🛡️ SEGURANÇA VITAL: Em produção num canal HTTPS/WSS (SAMSUNG usa 8002 WSS também), você DEVE
+    // usar SSL Pinning (CertificatePinner) ou configurar o TrustManager para não aceitar
+    // certificados adulterados MITM.
+    private val wsClient = client.newBuilder()
         .readTimeout(0, TimeUnit.MILLISECONDS)  // sem timeout para WebSocket
-        // ⚡ PERFORMANCE / ESTABILIDADE: O pingInterval mantém o WebSocket vivo por trás dos panos (evita que a TV corte a conexão)
         .pingInterval(30, TimeUnit.SECONDS)
-        // 🛡️ SEGURANÇA VITAL: Em produção num canal HTTPS/WSS (SAMSUNG usa 8002 WSS também), você DEVE 
-        // usar SSL Pinning (CertificatePinner) ou configurar o TrustManager para não aceitar certificados adulterados MITM.
         .build()
 
     override fun connectionState(): Flow<ConnectionState> = _state
@@ -516,7 +594,7 @@ class SamsungConnector @Inject constructor() : TvConnector {
                     (device.authToken?.let { "&token=$it" } ?: "")
 
             val request = Request.Builder().url(wsUrl).build()
-            webSocket = client.newWebSocket(request, SamsungWebSocketListener(device, _state))
+            webSocket = wsClient.newWebSocket(request, SamsungWebSocketListener(device, _state))
             Result.success(Unit)
         } catch (e: Exception) {
             _state.value = ConnectionState.Error(e.message ?: "Erro desconhecido")
@@ -538,10 +616,10 @@ class SamsungConnector @Inject constructor() : TvConnector {
         
         // Estrutura obrigatória pela documentação Tizen
         val payload = JSONObject().apply {
-            put("method", "ms.remote.control") # Dispara uma ação
+            put("method", "ms.remote.control") // Dispara uma ação
             put("params", JSONObject().apply {
-                put("Cmd", "Click") # Aperto de tecla remoto
-                put("DataOfCmd", keyCode) # O botão (ex: KEY_VOLUP)
+                put("Cmd", "Click") // Aperto de tecla remoto
+                put("DataOfCmd", keyCode) // O botão (ex: KEY_VOLUP)
                 put("Option", "false")
                 put("TypeOfRemote", "SendRemoteKey")
             })
@@ -624,12 +702,17 @@ import org.json.JSONObject
 import java.util.UUID
 import javax.inject.Inject
 
-class LGConnector @Inject constructor() : TvConnector {
+// ✅ SEGURANÇA / CORREÇÃO: O OkHttpClient é injetado pelo Hilt (configurado em AppModule)
+// em vez de ser criado com OkHttpClient() padrão aqui dentro. Isso garante que o
+// LocalNetworkSecurityInterceptor definido em AppModule seja aplicado a TODAS as
+// conexões LG, não apenas às do Roku.
+class LGConnector @Inject constructor(
+    private val client: OkHttpClient
+) : TvConnector {
 
     private var webSocket: WebSocket? = null
     private var clientKey: String? = null
     private val _state = MutableStateFlow<ConnectionState>(ConnectionState.Disconnected)
-    private val client = OkHttpClient()
     private lateinit var currentDevice: TvDevice
 
     override fun connectionState(): Flow<ConnectionState> = _state
@@ -720,7 +803,11 @@ class LGConnector @Inject constructor() : TvConnector {
             is TvCommand.Rewind       -> "ssap://media.controls/rewind"
             is TvCommand.LaunchApp    -> "ssap://com.webos.applicationManager/launch"
             is TvCommand.SendText     -> "ssap://com.webos.service.ime/insertText"
-            is TvCommand.Home         -> "ssap://com.webos.applicationManager/launch"
+            // ✅ CORREÇÃO DE LÓGICA: O botão Home NO WebOS abre o launcher da TV.
+            // URI correto: ssap://system.launcher/open (abre o Home Screen do WebOS).
+            // ❌ ERRADO ANTES: usava "ssap://com.webos.applicationManager/launch" (igual ao LaunchApp),
+            // o que tentaria lançar um app sem um ID definido, resultando em erro da TV.
+            is TvCommand.Home         -> "ssap://system.launcher/open"
             else -> null
         }
 
@@ -1522,11 +1609,25 @@ class LocalNetworkSecurityInterceptor : Interceptor {
         val isHttp = request.url.scheme == "http"
         val host = request.url.host
 
-        // Considera rede privada (10.x.x.x, 172.16-31.x.x, 192.168.x.x) ou Localhost
-        val isPrivateIp = host.startsWith("192.168.") || 
-                          host.startsWith("10.") || 
-                          host.startsWith("127.0.")
-        
+        // ✅ CORREÇÃO DE SEGURANÇA: Cobre os 3 ranges RFC 1918 completos + localhost completo.
+        //
+        // ANTES (incompleto):
+        //   host.startsWith("127.0.")  → cobria apenas 127.0.x.x (faltava 127.1.x.x–127.255.x.x)
+        //   Faltava: range 172.16.0.0/12 (172.16.x.x a 172.31.x.x) — comum em redes corporativas
+        //   e hotspots. Um IP 172.20.x.x passaria sem bloqueio na versão anterior.
+        //
+        // AGORA (completo — RFC 1918):
+        //   10.0.0.0/8     → host.startsWith("10.")
+        //   172.16.0.0/12  → host.startsWith("172.") && segundo octeto entre 16 e 31
+        //   192.168.0.0/16 → host.startsWith("192.168.")
+        //   127.0.0.0/8    → host.startsWith("127.") (todo o bloco de loopback)
+        val octets = host.split(".")
+        val secondOctet = octets.getOrNull(1)?.toIntOrNull() ?: -1
+        val isPrivateIp = host.startsWith("192.168.") ||
+                          host.startsWith("10.") ||
+                          host.startsWith("127.") || // 127.0.0.1 a 127.255.255.255 (loopback completo)
+                          (host.startsWith("172.") && secondOctet in 16..31) // 172.16–172.31 (RFC 1918)
+
         if (isHttp && !isPrivateIp) {
             throw SecurityException("Bloqueado MitM: Tráfego HTTP não criptografado só é permitido para IPs locais privados. Host suspeito: $host")
         }
