@@ -517,10 +517,11 @@ agp = "8.10.0"
 # Kotlin 2.1.x + KSP compatível
 # Kotlin 1.9.x funcionava até API 34; 2.1.x é necessário para API 35/36
 kotlin = "2.1.0"
-ksp = "2.1.0-1.0.29"              # deve ser sempre kotlin.version-x.y.z
+ksp = "2.1.0-1.0.29"        # deve ser sempre kotlin.version-x.y.z
 
 # ─── Dependências principais ─────────────────────────────────────────────────
 hilt = "2.51.1"
+hilt-navigation-compose = "1.2.0"
 coroutines = "1.9.0"
 
 # Compose BOM 2025.05+ inclui suporte nativo a Edge-to-Edge (Android 15)
@@ -530,6 +531,7 @@ compose-bom = "2025.05.01"
 # Navigation 2.9+ necessário para targetSdk = 35
 navigation = "2.9.0"
 
+# Network
 retrofit = "2.11.0"
 okhttp = "4.12.0"
 room = "2.7.1"
